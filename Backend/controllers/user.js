@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require ('jsonwebtoken');
-const pool = require('../utils/database')
+const database = require('../utils/database');
 
 exports.signup = (req, res, next) =>{
     bcrypt.hash(req.body.password, 10)
@@ -23,14 +23,17 @@ exports.signup = (req, res, next) =>{
         } else { res.status(201).json({ message: 'Nouvel utilisateur créé !'})};
     });
     connection.end();
-    }
-)
+    })
     .catch(error => res.status(500).json({error}))
 };
 
-exports.login = async (req,res) =>{
-    const query = "SELECT id, password, username FROM User WHERE username= ?";
-    pool.query(query, [req.body.username], (error, results)=>{
+exports.login = (req, res, next) =>{
+    const connection = database.connect();
+    const email = req.body.email;
+    const sql = "SELECT id, password, username FROM User WHERE username= ?";
+    const sqlParams = [email];
+
+    connection.execute(sql, sqlParams, (error, result, fields) =>{
         if (error) {
             res.status(500).json({"error": error.sqlMessage });
         } else if (results.length == 0) {
@@ -52,4 +55,24 @@ exports.login = async (req,res) =>{
             .catch(error => res.status(500).json({error}))
         }
     })
-} 
+};
+
+exports.delete = (req,res,next) =>{
+    const connection = database.connect();
+    const id = req.body.userId;
+    const sql = "DELETE FROM User WHERE id = ?";
+    const sqlParams = [id];
+
+    connection.execute(sql, sqlParams, (error, result, fields)=>{
+        if(error){
+            res.status(500).json({error});
+        } else {
+            res.status(201).json({message: "Utilisateur supprimé avec succès"});
+        };
+        connection.end();
+    })
+};
+
+exports.put = (req,res,next) =>{
+    const connection = database.connect();
+}
