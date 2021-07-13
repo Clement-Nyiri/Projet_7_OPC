@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require ('jsonwebtoken');
 const database = require('../utils/database');
+const fs = require('fs');
 
 exports.signup = (req, res, next) =>{
     bcrypt.hash(req.body.password, 10)
@@ -11,10 +12,10 @@ exports.signup = (req, res, next) =>{
         const email = req.body.email;
         const password = hash;
         const sql = "INSERT INTO User (username, email, password)\
-        VALUES (?, ?, ?, ?);";
+        VALUES (?, ?, ?);";
         const sqlParams = [username, email, password];
 
-        connection.execute(sql, sqlParams, (error, result, fields) => {
+        connection.execute(sql, sqlParams, (error, results, fields) => {
             if (error) {
                 if (error.errno === 1062) {res.status(403).json({"error": "L'email est déjà utilisé !"});
             } else {
@@ -30,10 +31,10 @@ exports.signup = (req, res, next) =>{
 exports.login = (req, res, next) =>{
     const connection = database.connect();
     const email = req.body.email;
-    const sql = "SELECT id, password, username FROM User WHERE username= ?";
+    const sql = "SELECT id, password, username, profile_picture FROM User WHERE email= ?;";
     const sqlParams = [email];
 
-    connection.execute(sql, sqlParams, (error, result, fields) =>{
+    connection.execute(sql, sqlParams, (error, results, fields) =>{
         if (error) {
             res.status(500).json({"error": error.sqlMessage });
         } else if (results.length == 0) {
@@ -45,25 +46,31 @@ exports.login = (req, res, next) =>{
                     return res.status(401).json({error : 'Mot de passe incorrect'});
                 }
                 res.status(200).json({
+                    message: "Utilisateur connecté",
+                    id_user: results[0].id,
                     token:jwt.sign(
-                        { userId: results[0].id },
+                        { id_user: results[0].id },
                         'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h'}
-                    )
+                    ),
+                    username : results[0].username,
+                    profilePicture: results[0].profile_picture
                 });
             })
             .catch(error => res.status(500).json({error}))
-        }
+        };
+        connection.end();
     })
 };
 
 exports.delete = (req,res,next) =>{
     const connection = database.connect();
-    const id = req.body.userId;
-    const sql = "DELETE FROM User WHERE id = ?";
-    const sqlParams = [id];
-
-    connection.execute(sql, sqlParams, (error, result, fields)=>{
+    const id_user = req.body.userId;
+    const sql = "DELETE FROM User WHERE id = ?;";
+    const sqlParams = [id_user];
+    const filename = userId.profile_picture.split('/images/')[1];
+    fs.unlink(`images/${filename}`);  // A modifier plus tard
+    connection.execute(sql, sqlParams, (error, results, fields)=>{
         if(error){
             res.status(500).json({error});
         } else {
@@ -73,6 +80,59 @@ exports.delete = (req,res,next) =>{
     })
 };
 
-exports.put = (req,res,next) =>{
+exports.updateDescription = (req,res,next) =>{
     const connection = database.connect();
-}
+    //Modification Photo de profil
+    const newDescription = req.body.description;
+    const userId = req.body.userId;
+    const sql = "UPDATE User SET description = ? WHERE id=?;";
+    const sqlParams = [newDescription, newProfilePicture, userId];
+    connection.execute(sql, sqlParams, (error, results, fields) =>{
+        if (error){
+            res.status(500).json({error});
+        } else {
+            res.status(201).json({message: "Profil mis à jour avec succès"});
+        }
+        connection.end();
+    })
+};
+
+exports.updatePicture = (req,res,next) => {
+const connection = database.connect();
+  const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+  const id_user = req.params.id;
+  const sql = "UPDATE User SET profilePicture=? WHERE id=?;";
+  const sqlParams = [imageUrl, id_user];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Photo de profil modifiée' });
+    }
+  });
+  connection.end();
+};
+
+exports.getOneUser = (req,res,next) => {
+    const connection = database.connect();
+    const searchId = req.params.id;
+    const sql = "SELECT id, username, email, profile_picture, description FROM User WHERE id=?;"
+    const sqlParams = [searchId];
+    connection.execute(sql, sqlParams, (error, results, fields)=> {
+        if (error) {
+            res.status(404).json ({"error": error.sqlMessage});
+        } else if (results.length == 0) {
+            res.status(401).json({error: "Cet utilisateur est introuvable"});
+        } else {
+            res.status(200).json({
+                id: results[0].id,
+                username: results[0].username,
+                email: results[0].email,
+                profile_picture: results[0].profile_picture,
+                description: results[0].description
+            });
+        }
+    });
+    connection.end();
+};
+
