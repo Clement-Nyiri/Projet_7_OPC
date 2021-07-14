@@ -19,21 +19,36 @@ exports.create = (req, res, next) =>{
     connection.end();
 };
 
-exports.update = (req,res,next) => {
+exports.delete = (req,res,next) =>{
     const connection = database.connect();
-    const id_user = req.body.id_user;
+    const id_comment = req.body.id_comment;
+
+    const sql = "DELETE FROM Comment WHERE id=?;";
+    const sqlParams = [id_comment];
+     connection.execute(sql, sqlParams, (error, results, fields)=> {
+         if (error){
+             res.status(500).json({"error": error.sqlMessage});
+         } else {
+             res.status(200).json({message: "Comment supprimé"});
+         }
+    });
+    connection.end();
+};
+
+exports.getAllCommentsOfPost = (req,res,next) =>{
+    const connection = database.connect();
     const id_post = req.body.id_post;
-    const content = req.body.content;
 
-    const sql = "UPDATE Comment SET content=? WHERE (id_user=? AND id_post=?);"
-    const sqlParams = [id_user, id_post, content];
-
-    connection.execute(sql, sqlParams, (error, results, fields)=>{
-        if(error){
+    const sql = "SELECT * FROM Comment\
+    INNER JOIN User ON Comment.id_user = User.id\
+    WHERE Comment.id_post = ?;";
+    const sqlParams = [id_post];
+    connection.execute(sql, sqlParams, (error, comments, fields)=>{
+        if (error){
             res.status(500).json({"error": error.sqlMessage});
         } else {
-            res.status(201).json({message: "Commentaire modifié avec succès"});
+            res.status(200).json({comments});
         }
     });
     connection.end();
-}
+};
