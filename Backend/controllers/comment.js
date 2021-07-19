@@ -2,12 +2,12 @@ const database = require('../utils/database');
 
 exports.create = (req, res, next) =>{
     const connection = database.connect();
-    const id_user = req.body.id_user;
+    const userId = req.body.userId;
     const content = req.body.content;
-    const id_post = req.body.id_post;
-    const date = date; // A modifier
+    const postId = req.body.postId;
+    const date = req.body.date; // A modifier
     const sql = "INSERT INTO Comment (id_user, id_post, content, date) VALUES (?,?,?,?);"
-    const sqlParams = [id_user, id_post, content, date];
+    const sqlParams = [userId, postId, content, date];
 
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if (error){
@@ -21,15 +21,15 @@ exports.create = (req, res, next) =>{
 
 exports.delete = (req,res,next) =>{
     const connection = database.connect();
-    const id_comment = req.body.id_comment;
+    const commentId = req.params.id;
 
-    const sql = "DELETE FROM Comment WHERE id=?;";
-    const sqlParams = [id_comment];
-     connection.execute(sql, sqlParams, (error, results, fields)=> {
+    const sql = "DELETE FROM Comment WHERE id_comment=?;";
+    const sqlParams = [commentId];
+    connection.execute(sql, sqlParams, (error, results, fields)=> {
          if (error){
              res.status(500).json({"error": error.sqlMessage});
          } else {
-             res.status(200).json({message: "Comment supprimé"});
+             res.status(200).json({message: "Commentaire supprimé"});
          }
     });
     connection.end();
@@ -37,12 +37,12 @@ exports.delete = (req,res,next) =>{
 
 exports.getAllCommentsOfPost = (req,res,next) =>{
     const connection = database.connect();
-    const id_post = req.body.id_post;
+    const postId = req.body.postId;
 
-    const sql = "SELECT * FROM Comment\
+    const sql = "SELECT content, date, username FROM Comment\
     INNER JOIN User ON Comment.id_user = User.id\
     WHERE Comment.id_post = ?;";
-    const sqlParams = [id_post];
+    const sqlParams = [postId];
     connection.execute(sql, sqlParams, (error, comments, fields)=>{
         if (error){
             res.status(500).json({"error": error.sqlMessage});

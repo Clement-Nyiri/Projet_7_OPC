@@ -7,12 +7,13 @@ exports.postLike = (req,res,next) =>{
     const sql = "DELETE FROM Likes WHERE (id_user=? AND id_post= ?);";
     const sqlParams = [id_user, id_post];
     //On supprime d'abord le like
-    connection.execute(sql, sqlParams, (error, results, fields)=>{
+    /*connection.execute(sql, sqlParams, (error, results, fields)=>{
         if (error){
+            console.log("On est à la 1ere requete bg");
             connection.end();
             res.status(500).json({"error": error.sqlMessage});
-        } else {
-            const sql2 = "INSERT INTO Likes (id_user, id_post) VALUEs (?,?);";
+        } else {*/
+            const sql2 = "INSERT INTO Likes (id_user, id_post) VALUES (?,?);";
             connection.execute(sql2, sqlParams, (error, results, fields) =>{
                 if (error){
                     res.status(500).json({"error" : error.sqlMessage});
@@ -20,16 +21,16 @@ exports.postLike = (req,res,next) =>{
                     res.status(201).json({message : "Vous avez aimé cette publication"});
                 }
             })
-        }
-    });
-    connection.end();
-};
+            connection.end();
+        };
+    
+
 
 exports.getLikes = (req, res, next) => {
     const connection = database.connect();
-    const id_post = req.body.postId;
+    const postId = req.body.postId;
     const sql = "SELECT * FROM Likes WHERE id_post=?;"
-    const sqlParams = [id_post];
+    const sqlParams = [postId];
 
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if (error){

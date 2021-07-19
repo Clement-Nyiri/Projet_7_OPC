@@ -8,12 +8,12 @@ exports.signup = (req, res, next) =>{
     .then(hash=>{
         const connection = database.connect();
 
-        const username = req.body.username;
+        const name = req.body.name;
         const email = req.body.email;
         const password = hash;
         const sql = "INSERT INTO User (username, email, password)\
         VALUES (?, ?, ?);";
-        const sqlParams = [username, email, password];
+        const sqlParams = [name, email, password];
 
         connection.execute(sql, sqlParams, (error, results, fields) => {
             if (error) {
@@ -31,7 +31,7 @@ exports.signup = (req, res, next) =>{
 exports.login = (req, res, next) =>{
     const connection = database.connect();
     const email = req.body.email;
-    const sql = "SELECT id, password, username, profile_picture FROM User WHERE email= ?;";
+    const sql = "SELECT id, password, username FROM User WHERE email= ?;";
     const sqlParams = [email];
 
     connection.execute(sql, sqlParams, (error, results, fields) =>{
@@ -65,11 +65,11 @@ exports.login = (req, res, next) =>{
 
 exports.delete = (req,res,next) =>{
     const connection = database.connect();
-    const id_user = req.body.userId;
+    const userId = req.params.id;
     const sql = "DELETE FROM User WHERE id = ?;";
-    const sqlParams = [id_user];
-    const filename = userId.profile_picture.split('/images/')[1];
-    fs.unlink(`images/${filename}`);  // A modifier plus tard
+    const sqlParams = [userId];
+    /*const filename = userId.profile_picture.split('/images/')[1];
+    fs.unlink(`images/${filename}`);  // A modifier plus tard*/
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if(error){
             res.status(500).json({error});
@@ -82,11 +82,10 @@ exports.delete = (req,res,next) =>{
 
 exports.updateDescription = (req,res,next) =>{
     const connection = database.connect();
-    //Modification Photo de profil
     const newDescription = req.body.description;
-    const userId = req.body.userId;
+    const userId = req.params.id;
     const sql = "UPDATE User SET description = ? WHERE id=?;";
-    const sqlParams = [newDescription, newProfilePicture, userId];
+    const sqlParams = [newDescription, userId];
     connection.execute(sql, sqlParams, (error, results, fields) =>{
         if (error){
             res.status(500).json({error});
