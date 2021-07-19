@@ -59,7 +59,11 @@ exports.delete = (req,res,next)=>{
 
 exports.getSomePosts = (req,res,next)=>{
     const connection = database.connect();
-    const sql = "SELECT * FROM Post ORDER BY date DESC LIMIT 10 OFFSET 0"
+    const sql = "SELECT image_url, content, date, username \
+    FROM Post \
+    INNER JOIN User ON Post.id_user = User.id \
+    ORDER BY date DESC \
+    LIMIT 10 OFFSET 0;"
     connection.execute(sql, (error, results, fields)=>{
         if (error){
             res.status(500).json({"error": error.sqlMessage});
