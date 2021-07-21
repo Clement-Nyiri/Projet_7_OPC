@@ -3,6 +3,26 @@
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 //-------------------Globals-------------------------\\
+// Couleur texte publis #001427
+#bloc_page{
+    height: 1400px;
+}
+
+.btn-warning{
+    color: white;
+}
+
+h4{
+    font-weight: bold;
+}
+
+#date_publi{
+    font-size: 0.9rem;
+}
+
+#like{
+    width: 15%;
+}
 
 // ----------------- Header PC ------------------\\
 header {
@@ -17,4 +37,16 @@ header {
 #monProfil a{
     text-decoration : none;
     color: white;
+}
+
+// --------------------- Profil utilsateur PC ---------------------\\
+#userProfile article{
+    display: flex;
+    flex-direction : row;
+    flex-wrap: wrap;
+}
+
+#profilePicture{
+    display: flex;
+    flex-direction: column;
 }

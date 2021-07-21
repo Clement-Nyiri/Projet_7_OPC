@@ -16,3 +16,8 @@ class Publication{
         </article>'
     }
 }
+
+/* <article class="card col-7 bg-white mt-4 text-center">\
+        <h4><a href="profile.html?'+this.id+'">'+this.name+'</a></h4>\
+        </article>' 
+*/

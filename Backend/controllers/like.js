@@ -28,7 +28,7 @@ exports.postLike = (req,res,next) =>{
 
 exports.getLikes = (req, res, next) => {
     const connection = database.connect();
-    const postId = req.body.postId;
+    const postId = req.params.id;
     const sql = "SELECT * FROM Likes WHERE id_post=?;"
     const sqlParams = [postId];
 

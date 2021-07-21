@@ -37,9 +37,9 @@ exports.delete = (req,res,next) =>{
 
 exports.getAllCommentsOfPost = (req,res,next) =>{
     const connection = database.connect();
-    const postId = req.params.postId;
+    const postId = req.params.id;
 
-    const sql = "SELECT content, date, username FROM Comment\
+    const sql = "SELECT content, date, username, User.id AS id_user FROM Comment\
     INNER JOIN User ON Comment.id_user = User.id\
     WHERE Comment.id_post = ?;";
     const sqlParams = [postId];
