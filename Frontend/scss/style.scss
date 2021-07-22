@@ -4,10 +4,18 @@
 
 //-------------------Globals-------------------------\\
 // Couleur texte publis #001427
-#bloc_page{
-    height: 1400px;
+a{
+    text-decoration: none;
+    color: rgb(31, 31, 31);
 }
 
+#content{
+    color: black;
+}
+
+#name_user{
+    color: #006d77;
+}
 .btn-warning{
     color: white;
 }
@@ -22,6 +30,10 @@ h4{
 
 #like{
     width: 15%;
+}
+
+#publish{
+    float : right;
 }
 
 // ----------------- Header PC ------------------\\

@@ -11,31 +11,47 @@
     <!-- FontAwesome Kit-->
     <script src="https://kit.fontawesome.com/2622c81c44.js" crossorigin="anonymous"></script>
     </head>
-    <body>
-        <div id="bloc_page" class="bg-info">
+    <body class="bg-info">
+        <div id="bloc_page" >
             <div class="position-sticky-top">
                 <header class="container-fluid bg-warning">
                     <div class="row">
                         <div class = "col-3">
                             <a class="navbar-brand" href="index.html"> <img src="images/logo-groupomania.png" alt="logo-groupomania" /></a>
                         </div>
-                        <div id="monProfil" class="col-1 my-auto text-center"><a href="profile.html">Mon profil</a></div>
-                        <div id="disconnect" class="col-1 my-auto text-center"><i class="fas fa-power-off"></i></div>
                     </div>
                 </header>
             </div>
 
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="card col-7 bg-white mt-4 text-center" id="makeAPost">
-                        <p>Bonjour et bienvenue</p>
+                <div class="form-group row justify-content-center">
+                    <div class="card col-7 bg-white mt-4 text-center" id="createAccount">
+                        <h2 class="mb-5"><u>Inscription</u></h2>
+                        <form>
+                            <div class="form-group row mb-2">
+                                <label for="name" class="col-sm-2 col-form-label">Nom</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" id="email" placeholder="Charles Dupont">
+                                </div>
+                              </div>
+                            <div class="form-group row mb-2">
+                              <label for="email" class="col-sm-2 col-form-label">Email</label>
+                              <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" placeholder="email@example.com">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                              <div class="col-sm-10">
+                                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                              </div>
+                            </div>
+                            <button type="submit" class="btn btn-warning mt-5">S'inscrire</button>
+                        </form>
+                        <div class="mt-5">
+                            <p>Vous avez déjà un compte? Cliquez <a href="login.html">ici</a></p>
+                        </div>
                     </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="card col-7 bg-white mt-4 text-center" id="filActu">
-                        <p>Fil d'actualité</p>
-                    </div>
-                </div>
             </div>
 
 

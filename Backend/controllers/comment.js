@@ -5,9 +5,8 @@ exports.create = (req, res, next) =>{
     const userId = req.body.userId;
     const content = req.body.content;
     const postId = req.body.postId;
-    const date = req.body.date; // A modifier
-    const sql = "INSERT INTO Comment (id_user, id_post, content, date) VALUES (?,?,?,?);"
-    const sqlParams = [userId, postId, content, date];
+    const sql = "INSERT INTO Comment (id_user, id_post, content, date) VALUES (?,?,?,NOW());"
+    const sqlParams = [userId, postId, content];
 
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if (error){
@@ -39,7 +38,7 @@ exports.getAllCommentsOfPost = (req,res,next) =>{
     const connection = database.connect();
     const postId = req.params.id;
 
-    const sql = "SELECT content, date, username, User.id AS id_user FROM Comment\
+    const sql = "SELECT content, username, User.id AS id_user, date, DATE_FORMAT(date, '%W %e %M %Y at %T') AS jolie_date FROM Comment\
     INNER JOIN User ON Comment.id_user = User.id\
     WHERE Comment.id_post = ?;";
     const sqlParams = [postId];
@@ -57,7 +56,7 @@ exports.getSomeCommentOfPost = (req,res,next) =>{
     const connection = database.connect();
     const postId = req.body.postId;
     
-     const sql = "SELECT username, content, date FROM Comment\
+     const sql = "SELECT username, content, date, DATE_FORMAT(date, '%W %e %M %Y at %T') AS jolie_date FROM Comment\
      INNERJOIN User ON Comment.id_user = User.id\
      WHERE Comment.id_post = ?\
      ORDER BY date DESC\

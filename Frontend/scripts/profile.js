@@ -23,7 +23,7 @@ class Profile {
         <article>\
         <div id="profilePicture" class="col-6 mt-3">\
             <h4 class="text-center">Photo de profil</h4>\
-            <img src="'+this.image+'" alt="photo_profil" class="rounded-top"/>\
+            <img src="'+this.image+'" class="rounded-top"/>\
             <button id="updateProfilePicture" class="btn-primary rounded-bottom">Changer ma photo de profil</button>\
         </div>\
         <div id="email" class="mt-3 col-6 text-center d-flex flex-column justify-content-center">\
@@ -31,7 +31,7 @@ class Profile {
             <p class="mx-auto">'+this.email+'</p>\
             <h4 class="mt-5 mx-auto">Description</h4>\
             <p class="mx-auto">'+this.description+'</p>\
-            <textarea id="newDescription" name="newDescription" class="w-50 mx-auto mb-2">Nouvelle description ici</textarea>\
+            <textarea id="newDescription" name="newDescription" class="w-50 mx-auto mb-2 text-muted">Nouvelle description ici</textarea>\
             <button id="updateDescription" class="btn-primary w-50 mx-auto">Changer ma description</button>\
         </div>\
         <button id="deleteAccount" class="mt-5 mb-2 btn-danger mx-auto rounded">Supprimer mon compte</button>\

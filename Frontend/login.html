@@ -19,15 +19,32 @@
                         <div class = "col-3">
                             <a class="navbar-brand" href="index.html"> <img src="images/logo-groupomania.png" alt="logo-groupomania" /></a>
                         </div>
-                        <div id="monProfil" class="col-1 my-auto text-center"><a href="profile.html">Mon profil</a></div>
-                        <div id="disconnect" class="col-1 my-auto text-center"><i class="fas fa-power-off"></i></div>
                     </div>
                 </header>
             </div>
 
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-8 bg-secondary mt-4 border border-dark rounded shadow" id="singlePost">
+                    <div class="card col-7 bg-white mt-4 text-center" id="authentification">
+                        <h2 class="mb-5"><u>Connexion</u></h2>
+                            <form>
+                                <div class="form-group row mb-2">
+                                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" id="email" placeholder="email@example.com">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-warning mt-4">Se connecter</button>
+                            </form>
+                            <div class="mt-5">
+                                <p>Vous n'avez pas encore de compte? Cliquez <a href="index.html">ici</a></p>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -39,7 +56,7 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
             <!-- JavaScript crée pour la page -->
-            <script src="scripts/post.js"></script>
+            <script src=""></script>
         </div>
     </body>
 </html>
