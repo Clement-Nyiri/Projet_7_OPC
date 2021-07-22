@@ -20,10 +20,10 @@ class Publication {
         var singlePost = document.getElementById('singlePost');
         displayPost.innerHTML = '<h4 class="d-inline"><img src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'">'+this.name+'</a></h4>\
         <p id="date_publi" class="d-inline">'+this.date+'</p>\
-        <div class="mt-2 mb-2"><h2>'+this.content+'</h2></div>\
+        <div class="mt-3 mb-3"><h2>'+this.content+'</h2></div>\
         <div id="likes" class="mt-3 border-bottom border-dark"></div>\
         <div id="comments" class="bg-secondary mt-4"></div>\
-        <input type="text" class="w-100 mt-2 mb-3" value="Ajouter un commentaire"></input>';
+        <input type="text" class="w-75 mt-2 mb-2" id="addComment" value="Ajouter un commentaire"></input>';
         singlePost.appendChild(displayPost);
     }
 };

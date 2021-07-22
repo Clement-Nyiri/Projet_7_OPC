@@ -38,7 +38,7 @@ exports.getAllCommentsOfPost = (req,res,next) =>{
     const connection = database.connect();
     const postId = req.params.id;
 
-    const sql = "SELECT content, username, User.id AS id_user, date, DATE_FORMAT(date, '%W %e %M %Y at %T') AS jolie_date FROM Comment\
+    const sql = "SELECT User.profile_picture, content, username, User.id AS id_user, date, DATE_FORMAT(date, '%W %e %M %Y at %T') AS jolie_date FROM Comment\
     INNER JOIN User ON Comment.id_user = User.id\
     WHERE Comment.id_post = ?;";
     const sqlParams = [postId];
@@ -46,7 +46,7 @@ exports.getAllCommentsOfPost = (req,res,next) =>{
         if (error){
             res.status(500).json({"error": error.sqlMessage});
         } else {
-            res.status(200).json({comments});
+            res.status(200).json({comments, postId});
         }
     });
     connection.end();
@@ -67,7 +67,10 @@ exports.getSomeCommentOfPost = (req,res,next) =>{
         if(error){
             res.status(500).json({"error": error.sqlMessage});
         } else {
-            res.status(201).json({results});
+            res.status(201).json({
+                results,
+                postId
+            });
         }
      })
 }

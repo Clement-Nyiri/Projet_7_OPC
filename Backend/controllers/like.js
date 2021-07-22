@@ -38,7 +38,7 @@ exports.getLikes = (req, res, next) => {
         } else {
             res.status(200).json({
                 nombre_de_likes : results.length,
-                results
+                postId
             })
         }
     });

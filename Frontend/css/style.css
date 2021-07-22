@@ -8386,6 +8386,15 @@ h4, .h4 {
 #publish {
   float: right; }
 
+h6, .h6 {
+  margin-left: 3.5%; }
+
+h3, .h3 {
+  margin-left: 2.5%; }
+
+#addComment {
+  margin-left: 3%; }
+
 header {
   color: white;
   font-size: 1.2em; }
