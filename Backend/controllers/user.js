@@ -54,7 +54,6 @@ exports.login = (req, res, next) =>{
                         { expiresIn: '24h'}
                     ),
                     username : results[0].username,
-                    profilePicture: results[0].profile_picture
                 });
             })
             .catch(error => res.status(500).json({error}))
@@ -97,19 +96,19 @@ exports.updateDescription = (req,res,next) =>{
 };
 
 exports.updatePicture = (req,res,next) => {
-const connection = database.connect();
-  const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-  const id_user = req.params.id;
-  const sql = "UPDATE User SET profile_picture=? WHERE id=?;";
-  const sqlParams = [imageUrl, id_user];
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-    } else {
-      res.status(201).json({ message: 'Photo de profil modifiée' });
-    }
-  });
-  connection.end();
+    const connection = database.connect();
+    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    const id_user = req.params.id;
+    const sql = "UPDATE User SET profile_picture=? WHERE id=?;";
+    const sqlParams = [imageUrl, id_user];
+    connection.execute(sql, sqlParams, (error, results, fields) => {
+        if (error) {
+        res.status(500).json({ "error": error.sqlMessage });
+        } else {
+        res.status(201).json({ message: 'Photo de profil modifiée' });
+     }
+    });
+    connection.end();
 };
 
 exports.getOneUser = (req,res,next) => {

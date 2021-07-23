@@ -51,26 +51,3 @@ exports.getAllCommentsOfPost = (req,res,next) =>{
     });
     connection.end();
 };
-
-exports.getSomeCommentOfPost = (req,res,next) =>{
-    const connection = database.connect();
-    const postId = req.body.postId;
-    
-     const sql = "SELECT username, content, date, DATE_FORMAT(date, '%W %e %M %Y at %T') AS jolie_date FROM Comment\
-     INNERJOIN User ON Comment.id_user = User.id\
-     WHERE Comment.id_post = ?\
-     ORDER BY date DESC\
-     LIMIT 3 OFFSET 0;";
-
-     const sqlParams = [postId];
-     connection.execute(sql, sqlParams, (error, results, fields)=>{
-        if(error){
-            res.status(500).json({"error": error.sqlMessage});
-        } else {
-            res.status(201).json({
-                results,
-                postId
-            });
-        }
-     })
-}
