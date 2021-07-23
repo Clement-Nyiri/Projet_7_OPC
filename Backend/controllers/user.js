@@ -100,7 +100,7 @@ exports.updatePicture = (req,res,next) => {
 const connection = database.connect();
   const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
   const id_user = req.params.id;
-  const sql = "UPDATE User SET profilePicture=? WHERE id=?;";
+  const sql = "UPDATE User SET profile_picture=? WHERE id=?;";
   const sqlParams = [imageUrl, id_user];
   connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
