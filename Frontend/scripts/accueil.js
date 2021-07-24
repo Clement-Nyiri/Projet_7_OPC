@@ -1,8 +1,9 @@
 // page d'accueil Groupomania \\
 
 class Publication {
-    constructor(id, user_id, profile_picture, name, content, date){
+    constructor(id, image_url, user_id, profile_picture, name, content, date){
         this.id = id;
+        this.image_url= image_url;
         this.user_id = user_id;
         this.profile_picture = profile_picture;
         this.name = name;
@@ -20,10 +21,40 @@ class Publication {
         displayPost.innerHTML = '<h4><img src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="mr-3">'+this.name+'</a></h4>\
         <p id="date_publi">'+this.date+'</p>\
         <div class="mt-3 mb-3"><h3><a href="post.html?/'+this.id+'">'+this.content+'</a></h3></div>\
+        <div id="imagePubli" class="w-100"><img src="'+this.image_url+'"/></div>\
         <div id="likes'+this.id+'"></div>\
         <div id="comments'+this.id+'" class="bg-secondary"></div>\
-        <input type="text" class="w-75 mt-2 mb-2" id="addComment" value="Ajouter un commentaire"></input>';
+        <input type="text" class="w-75 mt-2 mb-2" id="addComment'+this.id+'" placeholder="Ajouter un commentaire"></input>\
+        <button type="submit" class="btn btn-warning" id="sendComment'+this.id+'">Envoyer</button>';
         singlePost.appendChild(displayPost);
+
+        
+        //Creation de l'event d'ajout de commentaire
+        const postComment = document.getElementById('sendComment'+this.id+'');
+        postComment.addEventListener("click", (e)=>{
+            e.preventDefault();
+            //Recupération des valeurs du formulaire rempli + création d'un objet avec
+            const Commentaire = {
+                "userId": localStorage.getItem("id_user"),
+                "content": document.getElementById('addComment'+this.id+'').value,
+                "postId": this.id
+            };
+            var connectComment = fetch("http://localhost:3000/api/comment/", {
+                method: "POST",
+                body: JSON.stringify(Commentaire),
+                headers : {
+                    "Content-Type":"application/json"
+                }
+            })
+            connectComment
+                .then(async (res)=>{
+                    const response = await res.json();
+                    document.location.reload();
+                })
+                .catch(function(err){
+                    console.log(err);
+                })
+            });
     }
 };
 
@@ -59,8 +90,14 @@ PostToDisplay
         const response = await res.json();
         const realResponse = response.results;
         for (i=0; i<realResponse.length; i++){
-            var newPublication = new Publication(realResponse[i].id, realResponse[i].user_id, realResponse[i].profile_picture, realResponse[i].name, realResponse[i].content, realResponse[i].date);
+            var newPublication = new Publication(realResponse[i].id, realResponse[i].image_url, realResponse[i].user_id, realResponse[i].profile_picture, realResponse[i].name, realResponse[i].content, realResponse[i].date);
             Post.push(newPublication);
+
+            if (realResponse[i].image_url == null || realResponse[i].image_url == ''){
+                document.getElementById("imagePubli").style.display="none";
+            } else{}
+            
+            //On va chercher les likes
             var likesOfPost = fetch("http://localhost:3000/api/like/"+realResponse[i].id);
             likesOfPost
             .then(async (res)=>{
@@ -70,13 +107,43 @@ PostToDisplay
                     let id_post = responseLikes.postId;
                     var text = document.getElementById(`likes${id_post}`);
                     var textInside = document.createElement("p");
-                    textInside.innerHTML=`<button class="rounded border border-dark bg-warning text-white">J'aime</button>\
+                    textInside.innerHTML=`<button class="rounded border border-dark bg-warning text-white" id="ajoutLike${id_post}">J'aime</button>\
                     ${like_number} personne(s) ont aimé cette publication`;
                     text.appendChild(textInside);
+
+                    //On ajoute l'event listener de l'ajout de like ici pour suivre l'asynchrone
+                    const btnLike = document.getElementById(`ajoutLike${id_post}`);
+                    btnLike.addEventListener('click', (e)=>{
+                        e.preventDefault;
+                        //On récupère les données nécessaires pour l'ajout de like
+                        const Like = {
+                            "userId" : localStorage.getItem("id_user"),
+                            "postId" : id_post
+                        };
+                        var connectLike = fetch("http://localhost:3000/api/like/", {
+                            method: "POST",
+                            body: JSON.stringify(Like),
+                            headers : {
+                            "Content-Type":"application/json"
+                            }
+                        })
+                        connectLike
+                        .then(async (res) =>{
+                            const response = await res.json();
+                            var didLike = document.getElementById(`ajoutLike${id_post}`);
+                            didLike.classList.replace("bg-warning", "bg-success");
+                            didLike.classList.replace("text-white", "text-warning");
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                        })
+                    });
                 } catch(e){
                     console.log(e);
                 }
             })
+
+            // On va chercher les commentaires
             var commentsOfPost = fetch("http://localhost:3000/api/comment/"+realResponse[i].id);
             commentsOfPost
             .then(async (res)=>{
@@ -100,3 +167,36 @@ PostToDisplay
 .catch(function(err){
     console.log(err);
 });
+
+// Post new Publi \\
+
+var newPubli = document.getElementById("publishNewPost");
+var contentNewPubli = document.getElementById("contentNewPost");
+var imageNewPubli = document.getElementById("imageNewPost");
+    newPubli.addEventListener('click', (e)=>{
+        e.preventDefault;
+        //On récupère les données nécessaires pour l'ajout de like
+        const Publi = {
+            "userId" : localStorage.getItem("id_user"),
+            "content" : contentNewPubli.value,
+            "imageUrl" : imageNewPubli.value
+        };
+        var connectPost = fetch("http://localhost:3000/api/post/", {
+            method: "POST",
+            body: JSON.stringify(Publi),
+            headers : {
+            "Content-Type":"application/json"
+            }
+        })
+        connectPost
+        .then(async (res) =>{
+            const response = await res.json();
+            window.alert(response.message);
+            document.location.reload();
+            imageNewPubli.value = null;
+            contentNewPubli.value = null;
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+    });

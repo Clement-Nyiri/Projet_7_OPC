@@ -126,7 +126,7 @@ postToDisplay
                         .catch(function(err){
                             console.log(err);
                         })
-                    })
+                    });
                 } catch(e){
                     console.log(e);
                 }

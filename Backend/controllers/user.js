@@ -73,11 +73,11 @@ exports.delete = (req,res,next) =>{
         if(error){
             res.status(500).json({error});
         } else {
-            res.status(201).json({message: "Utilisateur supprimé avec succès"});
-        };
+            res.status(200).json({message : "Utilisateur supprimé avec succès!"});
+            }
+        });
         connection.end();
-    })
-};
+    };
 
 exports.updateDescription = (req,res,next) =>{
     const connection = database.connect();

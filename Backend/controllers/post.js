@@ -14,7 +14,7 @@ exports.create = (req,res,next)=>{
         if(error){
             res.status(500).json({"error":error.sqlMessage});
         } else {
-            res.status(200).json({message: "Publication ajoutée avec succès!"})
+            res.status(200).json({message: "Publication créée avec succès!"})
         }
     });
     connection.end;
