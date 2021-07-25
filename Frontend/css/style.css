@@ -8392,8 +8392,20 @@ h6, .h6 {
 h3, .h3 {
   margin-left: 2.5%; }
 
-#addComment {
-  margin-left: 3%; }
+.envoiComment {
+  margin-top: -1%; }
+
+.ajoutComment {
+  margin-left: 7%; }
+
+.suppPost {
+  float: right;
+  margin-right: 5%; }
+
+.suppComment {
+  float: right;
+  margin-top: 2%;
+  margin-right: 5%; }
 
 header {
   color: white;

@@ -1,5 +1,13 @@
 // Page profil site groupomania \\
 
+// Redirection si user non connecté
+var idUserLocal = localStorage.getItem("id_user");
+console.log(idUserLocal);
+if (idUserLocal == null){
+    window.alert("Veuillez vous connecter pour accéder à cette page");
+    document.location.href="login.html";
+}
+
 // Recup chaine de l'id dans l'URL
 const queryStringUrlId = window.location.search;
 
@@ -17,6 +25,7 @@ class Profile {
     }
     createProfile(){
         var displayProfile = document.createElement("div");
+        displayProfile.classList.add("mb-4");
         var location = document.getElementById('userProfile');
         //HTML à ajouter dans la page
         displayProfile.innerHTML = '<h4 class="mt-4 text-center font-weight-bold">'+this.name+'</h4>\
@@ -24,8 +33,8 @@ class Profile {
         <div id="profilePicture" class="col-6 mt-3">\
             <h4 class="text-center">Photo de profil</h4>\
             <img src="'+this.image+'" class="rounded-top"/>\
-            <label for="updateProfilePicture" class=" d-inline btn btn-primary rounded-bottom">Changer ma photo de profil</label>\
-            <input type="file" style="display:none" id="updateProfilePicture"></input>\
+            <input type="file"  id="updateProfilePicture"></input>\
+            <button class="d-inline btn btn-primary rounded-bottom" id="profilePictureChange">Changer ma photo de profil</button>\
         </div>\
         <div id="email_desc" class="mt-3 col-6 text-center d-flex flex-column justify-content-center">\
             <h4 class="mx-auto">Email</h4>\
@@ -43,6 +52,22 @@ class Profile {
             var desc = document.getElementById("description");
             desc.innerText = "Ce profil n'a pas de description";
         }
+
+        var isAdmin = localStorage.getItem("admin");
+        var idLocalStorage = localStorage.getItem("id_user");
+        var newIdPage = idPage.slice(1);
+        function rendreInvisible(buttonName){
+            var turnInvisible = document.getElementById(buttonName);
+            turnInvisible.classList.add("d-none");
+        }
+        console.log(isAdmin);
+        if(idLocalStorage !=newIdPage && isAdmin != 1){
+            rendreInvisible("deleteAccount");
+            rendreInvisible("newDescription");
+            rendreInvisible("updateDescription");
+            rendreInvisible("profilePictureChange");
+        }
+
     }
 };
 
@@ -98,6 +123,34 @@ profilUtilisateur
                 console.log(err);
             })
         })
+
+        // Ajout de la fonction de changement de profile picture
+        var btnImage = document.getElementById("profilePictureChange");
+        var newProfilePicture = document.getElementById("updateProfilePicture");
+        btnImage.addEventListener('click', (h)=>{
+            h.preventDefault;
+            //on récupère ce dont on a besoin pour l'update
+            const newPicture = {"imageUrl": newProfilePicture.value};
+            console.log(JSON.stringify(newPicture));
+            var connectPicture = fetch('http://localhost:3000/api/user'+idPage+'/picture', {
+                method: "PUT",
+                body: JSON.stringify(newPicture),
+                headers : {
+                    "Content-Type":"application/json"
+                }
+            })
+            connectPicture
+            .then(async (res) =>{
+                const response = await res.json();
+                window.alert(response.message);
+                document.location.reload();
+            })
+            .catch(function(err){
+                console.log(err);
+            })
+        })
+
+
     } catch(e) {
         console.log(e);
     }

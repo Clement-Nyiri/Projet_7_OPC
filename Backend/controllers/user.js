@@ -31,7 +31,7 @@ exports.signup = (req, res, next) =>{
 exports.login = (req, res, next) =>{
     const connection = database.connect();
     const email = req.body.email;
-    const sql = "SELECT id, password, username FROM User WHERE email= ?;";
+    const sql = "SELECT id, password, admin FROM User WHERE email= ?;";
     const sqlParams = [email];
 
     connection.execute(sql, sqlParams, (error, results, fields) =>{
@@ -53,7 +53,7 @@ exports.login = (req, res, next) =>{
                         'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h'}
                     ),
-                    username : results[0].username,
+                    admin: results[0].admin,
                 });
             })
             .catch(error => res.status(500).json({error}))
@@ -97,7 +97,7 @@ exports.updateDescription = (req,res,next) =>{
 
 exports.updatePicture = (req,res,next) => {
     const connection = database.connect();
-    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    const imageUrl = req.body.imageUrl;
     const id_user = req.params.id;
     const sql = "UPDATE User SET profile_picture=? WHERE id=?;";
     const sqlParams = [imageUrl, id_user];

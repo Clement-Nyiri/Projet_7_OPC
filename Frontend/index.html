@@ -12,46 +12,34 @@
     <script src="https://kit.fontawesome.com/2622c81c44.js" crossorigin="anonymous"></script>
     </head>
     <body class="bg-info">
-        <div id="bloc_page" >
+        <div id="bloc_page">
             <div class="position-sticky-top">
                 <header class="container-fluid bg-warning">
                     <div class="row">
                         <div class = "col-3">
                             <a class="navbar-brand" href="index.html"> <img src="images/logo-groupomania.png" alt="logo-groupomania" /></a>
                         </div>
+                        <div id="monProfil" class="col-1 my-auto text-center"><a href="profile.html">Mon profil</a></div>
+                        <div id="disconnect" class="col-1 my-auto text-center"><i class="fas fa-power-off"></i></div>
                     </div>
                 </header>
             </div>
 
             <div class="container">
-                <div class="form-group row justify-content-center">
-                    <div class="card col-7 bg-white mt-4 text-center" id="createAccount">
-                        <h2 class="mb-5"><u>Inscription</u></h2>
-                        <form>
-                            <div class="form-group row mb-2">
-                                <label for="name" class="col-sm-2 col-form-label">Nom</label>
-                                <div class="col-sm-10">
-                                  <input type="text" class="form-control" id="name" placeholder="Charles Dupont">
-                                </div>
-                              </div>
-                            <div class="form-group row mb-2">
-                              <label for="email" class="col-sm-2 col-form-label">Email</label>
-                              <div class="col-sm-10">
-                                <input type="email" class="form-control" id="email" placeholder="email@example.com">
-                              </div>
-                            </div>
-                            <div class="form-group row">
-                              <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-                              <div class="col-sm-10">
-                                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                              </div>
-                            </div>
-                            <button type="submit" class="btn btn-warning mt-5" id="inscrire">S'inscrire</button>
-                        </form>
-                        <div class="mt-5">
-                            <p>Vous avez déjà un compte? Cliquez <a href="login.html">ici</a></p>
+                <div class="row justify-content-center">
+                    <div class="card col-7 mt-4" id="makeAPost">
+                        <label for="welcomePost" class="h3">Créer une publication</label>
+                        <textarea name ="welcomePost" id="contentNewPost" class="rounded border border-dark" placeholder="Dîtes nous quelque chose"></textarea>
+                        <div class="text-right mt-2 mb-2">
+                            <input type="file" class="form-control-file" id="imageNewPost">
+                            <button class="w-25 rounded border border-dark" id="publishNewPost">Publier</button>
                         </div>
                     </div>
+                </div>
+                <div class="row justify-content-center border-0">
+                    <div class="col-7 px-0 bg-info mt-4" id="filActu">
+                    </div>
+                </div>
             </div>
 
 
@@ -61,7 +49,7 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
             <!-- JavaScript crée pour la page -->
-            <script src="scripts/inscription.js"></script>
+            <script src="scripts/accueil.js"></script>
         </div>
     </body>
 </html>
