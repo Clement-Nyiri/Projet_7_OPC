@@ -4,11 +4,10 @@
 
 //-------------------Globals-------------------------\\
 // Couleur texte publis #001427
-a{
+#filActu a{
     text-decoration: none;
-    color: rgb(31, 31, 31);
+    color: #001427;
 }
-
 #content{
     color: black;
 }
@@ -68,12 +67,13 @@ header {
     color: white;
     font-size: 1.2em;
 }
-#monProfil {
+.monProfil {
     margin-left: 55%;
     font-weight: bold;
+    color: white;
 }
 
-#monProfil a{
+.monProfil a{
     text-decoration : none;
     color: white;
 }
@@ -89,3 +89,5 @@ header {
     display: flex;
     flex-direction: column;
 }
+
+// --------------------- Post PC ------------------- \\

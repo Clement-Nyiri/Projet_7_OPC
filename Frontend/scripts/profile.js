@@ -8,6 +8,30 @@ if (idUserLocal == null){
     document.location.href="login.html";
 }
 
+var nav = document.getElementById("barreNav");
+var displayProfile = document.createElement("div");
+displayProfile.classList.add("col-1");
+displayProfile.classList.add("my-auto");
+displayProfile.classList.add("text-center");
+displayProfile.classList.add("monProfil");
+displayProfile.innerHTML= '<a href="profile.html?/'+idUserLocal+'">Mon profil</a>';
+nav.appendChild(displayProfile);
+
+var displayDisconnect = document.createElement("div");
+displayDisconnect.classList.add("col-1");
+displayDisconnect.classList.add("my-auto");
+displayDisconnect.classList.add("text-center");
+displayDisconnect.classList.add("disconnect");
+displayDisconnect.innerHTML='<i class="fas fa-power-off"></i>';
+nav.appendChild(displayDisconnect);
+
+const disconnect = document.getElementsByClassName("disconnect")[0];
+disconnect.addEventListener("click", (e)=>{
+    e.preventDefault();
+    localStorage.clear();
+    window.location.replace("login.html")
+});
+
 // Recup chaine de l'id dans l'URL
 const queryStringUrlId = window.location.search;
 

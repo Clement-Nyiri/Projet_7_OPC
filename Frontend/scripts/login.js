@@ -19,7 +19,7 @@ btnConnect.addEventListener('click', (e)=>{
     connect
         .then(async (res)=>{
             const response = await res.json();
-            window.location.replace("profile.html?/"+response.id_user);
+            window.location.replace("index.html");
             localStorage.setItem("admin", response.admin);
             localStorage.setItem("id_user", response.id_user);
         })

@@ -47,12 +47,11 @@ exports.login = (req, res, next) =>{
                 }
                 res.status(200).json({
                     message: "Utilisateur connecté",
-                    id_user: results[0].id,
-                    token:jwt.sign(
-                        { id_user: results[0].id },
+                    token: jwt.sign({ id_user: results[0].id },
                         'RANDOM_TOKEN_SECRET',
-                        { expiresIn: '24h'}
+                        { expiresIn: '24h'},
                     ),
+                    id_user: results[0].id,
                     admin: results[0].admin,
                 });
             })

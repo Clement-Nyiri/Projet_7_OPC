@@ -75,6 +75,7 @@ exports.getSomePosts = (req,res,next)=>{
             res.status(500).json({"error": error.sqlMessage});
         } else {
             res.status(200).json({results});
+            
         }
     })
 };

@@ -2,11 +2,34 @@
 
 // Redirection si user non connecté
 var idUserLocal = localStorage.getItem("id_user");
-console.log(idUserLocal);
 if (idUserLocal == null || idUserLocal == undefined){
     window.alert("Veuillez vous connecter pour accéder à cette page");
     document.location.href="login.html";
 }
+
+var nav = document.getElementById("barreNav");
+var displayProfile = document.createElement("div");
+displayProfile.classList.add("col-1");
+displayProfile.classList.add("my-auto");
+displayProfile.classList.add("text-center");
+displayProfile.classList.add("monProfil");
+displayProfile.innerHTML= '<a href="profile.html?/'+idUserLocal+'">Mon profil</a>';
+nav.appendChild(displayProfile);
+
+var displayDisconnect = document.createElement("div");
+displayDisconnect.classList.add("col-1");
+displayDisconnect.classList.add("my-auto");
+displayDisconnect.classList.add("text-center");
+displayDisconnect.classList.add("disconnect");
+displayDisconnect.innerHTML='<i class="fas fa-power-off"></i>';
+nav.appendChild(displayDisconnect);
+
+const disconnect = document.getElementsByClassName("disconnect")[0];
+disconnect.addEventListener("click", (e)=>{
+    e.preventDefault();
+    localStorage.clear();
+    window.location.replace("login.html")
+});
 
 class Publication {
     constructor(id, image_url, user_id, profile_picture, name, content, date){
@@ -57,7 +80,7 @@ class Publication {
                 method: "POST",
                 body: JSON.stringify(Commentaire),
                 headers : {
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
                 }
             })
             connectComment
@@ -176,7 +199,7 @@ PostToDisplay
                     let id_post = responseLikes.postId;
                     var text = document.getElementById(`likes${id_post}`);
                     var textInside = document.createElement("p");
-                    textInside.innerHTML=`<button class="rounded border border-dark bg-warning text-white" id="ajoutLike${id_post}">J'aime</button>\
+                    textInside.innerHTML=`<button class="rounded border border-dark bg-warning text-white" id="ajoutLike${id_post}"><i id="iconLike" class="far fa-thumbs-up"></i>J'aime</button>\
                     ${like_number} personne(s) ont aimé cette publication`;
                     text.appendChild(textInside);
 
@@ -212,8 +235,8 @@ PostToDisplay
                 }
             })
 
-            // On va chercher les commentaires
-            var commentsOfPost = fetch("http://localhost:3000/api/comment/"+realResponse[i].id);
+            // On va chercher quelques commentaires
+            var commentsOfPost = fetch('http://localhost:3000/api/comment/'+realResponse[i].id+'/someComments');
             commentsOfPost
             .then(async (res)=>{
                 try{
