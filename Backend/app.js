@@ -3,7 +3,6 @@ const mysql = require ('mysql2');
 const bodyParser = require('body-parser');
 const path = require('path');
 const auth = require("../Backend/middleware/auth");
-const jwt = require('jsonwebtoken');
 
 
 const likeRoutes = require('./routes/like');
@@ -24,6 +23,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/like', likeRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/user', userRoutes);

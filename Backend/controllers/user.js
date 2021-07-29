@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require ('jsonwebtoken');
 const database = require('../utils/database');
-const fs = require('fs');
+const Cookies = require('cookies');
+const Cryptr = require("cryptr");
+const cryptr = new Cryptr('myTotalySecretKey');
 
 exports.signup = (req, res, next) =>{
     bcrypt.hash(req.body.password, 10)
@@ -11,9 +13,10 @@ exports.signup = (req, res, next) =>{
         const name = req.body.name;
         const email = req.body.email;
         const password = hash;
-        const sql = "INSERT INTO User (username, email, password)\
-        VALUES (?, ?, ?);";
-        const sqlParams = [name, email, password];
+        const imageUrl = "localhost:3000/images/defaultProfilePicture.jpg"
+        const sql = "INSERT INTO User (username, email, password, profile_picture)\
+        VALUES (?, ?, ?, ?);";
+        const sqlParams = [name, email, password, imageUrl];
 
         connection.execute(sql, sqlParams, (error, results, fields) => {
             if (error) {
@@ -45,14 +48,23 @@ exports.login = (req, res, next) =>{
                 if (!valid) {
                     return res.status(401).json({error : 'Mot de passe incorrect'});
                 }
+                const newToken = jwt.sign(
+                    { id_user: results[0].id },
+                    'RANDOM_TOKEN_SECRET',
+                );
+
+                //Envoi du token & userId dans un cookie
+                const LSContent = {
+                    token: newToken,
+                    userId: results[0].id
+                };
+                const cryptedToken = cryptr.encrypt(JSON.stringify(LSContent));
+                
                 res.status(200).json({
                     message: "Utilisateur connecté",
-                    token: jwt.sign({ id_user: results[0].id },
-                        'RANDOM_TOKEN_SECRET',
-                        { expiresIn: '24h'},
-                    ),
                     id_user: results[0].id,
                     admin: results[0].admin,
+                    tokenCrypted : cryptedToken
                 });
             })
             .catch(error => res.status(500).json({error}))
@@ -60,6 +72,29 @@ exports.login = (req, res, next) =>{
         connection.end();
     })
 };
+
+exports.getCurrentUser = (req, res, next) =>{
+    const connection = database.connect();
+    const tokenLS = req.body.token;
+    const token = JSON.parse(cryptr.decrypt(tokenLS));
+    const searchId = token.userId;
+    const sql = "SELECT id, username, admin FROM User WHERE id=?";
+    const sqlParams = [searchId];
+    connection.execute(sql, sqlParams, (error, results, fields) =>{
+        if (error) {
+            res.status(500).json({"error": error.sqlMessage})
+        } else if (results.length === 0){
+            res.status(401).json({ error : 'Cet utilisateur n\'existe pas'});
+        } else {
+            res.status(200).json({
+                userId: results[0].id,
+                name: results[0].username,
+                admin: results[0].admin
+            });
+        }
+    });
+    connection.end();
+}
 
 exports.delete = (req,res,next) =>{
     const connection = database.connect();

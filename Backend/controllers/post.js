@@ -6,7 +6,7 @@ exports.create = (req,res,next)=>{
     const userId = req.body.userId;
     const content = req.body.content;
     const imageUrl = req.body.imageUrl;
-
+    console.log(imageUrl);
     const sql = "INSERT INTO Post (id_user, image_url, content, date)\
     VALUES (?,?,?,NOW());";
     const sqlParams = [userId, imageUrl, content];

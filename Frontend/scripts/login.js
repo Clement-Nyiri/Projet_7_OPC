@@ -20,10 +20,20 @@ btnConnect.addEventListener('click', (e)=>{
         .then(async (res)=>{
             const response = await res.json();
             window.location.replace("index.html");
-            localStorage.setItem("admin", response.admin);
-            localStorage.setItem("id_user", response.id_user);
+            function setWithExpiry(key, value, ttl) {
+                const now = new Date()
+            
+                // `item` is an object which contains the original value
+                // as well as the time when it's supposed to expire
+                const item = {
+                    value: value,
+                    expiry: now.getTime() + ttl,
+                }
+                localStorage.setItem(key, JSON.stringify(item))
+            };
+            var stockageToken = setWithExpiry("snToken", response.tokenCrypted, 3600000);//valide pour 1h
         })
         .catch(function(err){
             console.log(err);
         })
-})
+});
