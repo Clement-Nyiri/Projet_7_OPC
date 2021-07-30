@@ -33,6 +33,8 @@ exports.getOnePost = (req,res,next)=>{
     connection.execute(sql,sqlParams, (error, results, fields)=>{
         if(error){
             res.status(500).json({"error" : error.sqlMessage});
+        } else if(results.length == 0){
+            res.status(404).json({message : "Cette publication est introuvable"});
         } else {
             res.status(200).json({
                 imageUrl: results[0].image_url,
@@ -69,7 +71,7 @@ exports.getSomePosts = (req,res,next)=>{
     FROM Post \
     INNER JOIN User ON Post.id_user = User.id \
     ORDER BY Post.date DESC \
-    LIMIT 10 OFFSET 0;"
+    LIMIT 20 OFFSET 0;"
     connection.execute(sql, (error, results, fields)=>{
         if (error){
             res.status(500).json({"error": error.sqlMessage});

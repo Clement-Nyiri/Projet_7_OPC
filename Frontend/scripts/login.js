@@ -18,6 +18,13 @@ btnConnect.addEventListener('click', (e)=>{
     })
     connect
         .then(async (res)=>{
+            if(res.status == 404){
+                window.alert("Cet utilisateur n'existe pas");
+                window.location.reload();
+            } else if (res.status == 401){
+                window.alert("Mot de passe incorrect");
+                window.location.reload();
+            }else{
             const response = await res.json();
             window.location.replace("index.html");
             function setWithExpiry(key, value, ttl) {
@@ -32,7 +39,7 @@ btnConnect.addEventListener('click', (e)=>{
                 localStorage.setItem(key, JSON.stringify(item))
             };
             var stockageToken = setWithExpiry("snToken", response.tokenCrypted, 3600000);//valide pour 1h
-        })
+        }})
         .catch(function(err){
             console.log(err);
         })

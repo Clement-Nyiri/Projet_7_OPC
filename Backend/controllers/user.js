@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require ('jsonwebtoken');
 const database = require('../utils/database');
-const Cookies = require('cookies');
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr('myTotalySecretKey');
 
@@ -13,7 +12,7 @@ exports.signup = (req, res, next) =>{
         const name = req.body.name;
         const email = req.body.email;
         const password = hash;
-        const imageUrl = "localhost:3000/images/defaultProfilePicture.jpg"
+        const imageUrl = "http://localhost:3000/images/defaultProfilePicture.jpg"
         const sql = "INSERT INTO User (username, email, password, profile_picture)\
         VALUES (?, ?, ?, ?);";
         const sqlParams = [name, email, password, imageUrl];
@@ -41,7 +40,7 @@ exports.login = (req, res, next) =>{
         if (error) {
             res.status(500).json({"error": error.sqlMessage });
         } else if (results.length == 0) {
-            res.status(401).json({error : 'Cet utilisateur est introuvable '});
+            res.status(404).json({error : 'Cet utilisateur n\'existe pas '});
         } else {
             bcrypt.compare(req.body.password, results[0].password)
             .then (valid =>{
@@ -84,7 +83,7 @@ exports.getCurrentUser = (req, res, next) =>{
         if (error) {
             res.status(500).json({"error": error.sqlMessage})
         } else if (results.length === 0){
-            res.status(401).json({ error : 'Cet utilisateur n\'existe pas'});
+            res.status(404).json({ error : 'Cet utilisateur n\'existe pas'});
         } else {
             res.status(200).json({
                 userId: results[0].id,
@@ -101,13 +100,19 @@ exports.delete = (req,res,next) =>{
     const userId = req.params.id;
     const sql = "DELETE FROM User WHERE id = ?;";
     const sqlParams = [userId];
-    /*const filename = userId.profile_picture.split('/images/')[1];
-    fs.unlink(`images/${filename}`);  // A modifier plus tard*/
+    
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if(error){
             res.status(500).json({error});
         } else {
-            res.status(200).json({message : "Utilisateur supprimé avec succès!"});
+            const sql2 = "SELECT profile_picture FROM User WHERE id=?";
+            connection.execute(sql2, sqlParams, (error, results, fields)=>{
+                if(error){
+                    res.status(501).json({error});
+                } else{
+                    res.status(200).json({message: "Utilisateur supprimé avec succès !"})
+                }
+            })
             }
         });
         connection.end();
@@ -131,7 +136,7 @@ exports.updateDescription = (req,res,next) =>{
 
 exports.updatePicture = (req,res,next) => {
     const connection = database.connect();
-    const imageUrl = req.body.imageUrl;
+    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     const id_user = req.params.id;
     const sql = "UPDATE User SET profile_picture=? WHERE id=?;";
     const sqlParams = [imageUrl, id_user];
@@ -152,9 +157,9 @@ exports.getOneUser = (req,res,next) => {
     const sqlParams = [searchId];
     connection.execute(sql, sqlParams, (error, results, fields)=> {
         if (error) {
-            res.status(404).json ({"error": error.sqlMessage});
+            res.status(500).json ({"error": error.sqlMessage});
         } else if (results.length == 0) {
-            res.status(401).json({error: "Cet utilisateur est introuvable"});
+            res.status(404).json({error: 'Cet utilisateur n\'existe pas'});
         } else {
             res.status(200).json({
                 id: results[0].id,

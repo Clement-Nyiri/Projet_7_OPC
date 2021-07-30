@@ -89,11 +89,13 @@ getCurrentUser
             //HTML à ajouter dans la page
             displayProfile.innerHTML = '<h4 class="mt-4 text-center font-weight-bold">'+this.name+'</h4>\
             <article>\
-            <div id="profilePicture" class="col-6 mt-3">\
+            <div id="profilePicture" class="col-6 mt-3 align-items-center">\
+                <div>\
                 <h4 class="text-center">Photo de profil</h4>\
-                <img src="'+this.image+'" class="rounded-top"/>\
-                <input type="file"  id="updateProfilePicture"></input>\
-                <button class="d-inline btn btn-primary rounded-bottom" id="profilePictureChange">Changer ma photo de profil</button>\
+                <img src="'+this.profile_picture+'" class="rounded-top" id="profile_picture"/>\
+                </div>\
+                <input type="file" class="ml-4" name="image" id="updateProfilePicture">\
+                <button type="submit" class="btn btn-primary rounded-bottom ml-4" id="profilePictureChange">Changer ma photo de profil</button>\
             </div>\
             <div id="email_desc" class="mt-3 col-6 text-center d-flex flex-column justify-content-center">\
                 <h4 class="mx-auto">Email</h4>\
@@ -122,6 +124,8 @@ getCurrentUser
                 rendreInvisible("deleteAccount");
                 rendreInvisible("newDescription");
                 rendreInvisible("updateDescription");
+            }
+            if (responseUser.userId !=newIdPage){
                 rendreInvisible("profilePictureChange");
                 rendreInvisible("updateProfilePicture");
             }
@@ -139,6 +143,10 @@ getCurrentUser
     profilUtilisateur
     .then(async (res)=>{
         try{
+            if(res.status == 404){
+                window.alert("Cet utilisateur est introuvable");
+                window.location.replace("index.html");
+            } else {
             const response = await res.json();
             thisProfile = new Profile(response.id, response.username,response.email, response.description, response.profile_picture);
 
@@ -173,7 +181,7 @@ getCurrentUser
             btnDelete.addEventListener("click", (f)=>{
                 f.preventDefault;
                 // on récupère ce dont on a besoin pour la suppression
-                var suppressionAccount = fetch('http://localhost:3000/api/user/'+idPage+'', {
+                var suppressionAccount = fetch('http://localhost:3000/api/user'+idPage+'', {
                     method: "DELETE",
                     headers : {
                         "Content-Type":"application/json",
@@ -183,7 +191,13 @@ getCurrentUser
                 suppressionAccount
                 .then(async (res)=>{
                     const response = await res.json();
-                    window.location.replace("accueil.html");
+                    if(responseUser.admin == 1){
+                        window.alert("Cet utilisateur a bien été supprimé");
+                        window.location.replace("index.html");
+                    } else{
+                        localStorage.clear();
+                        //window.location.replace("inscription.html");
+                    }
                 })
                 .catch(function(err){
                     console.log(err);
@@ -193,24 +207,26 @@ getCurrentUser
             // Ajout de la fonction de changement de profile picture
             var btnImage = document.getElementById("profilePictureChange");
             var newProfilePicture = document.getElementById("updateProfilePicture");
+            const formData = new FormData();
+
+            const options =  {
+                method: "PUT",
+                body: formData,
+                headers : {
+                    "Authorization": 'Bearer '+tokenRequete+''
+                }
+            };
+            delete options.headers['Content-Type'];
+            
+            
             btnImage.addEventListener('click', (h)=>{
                 h.preventDefault;
                 //on récupère ce dont on a besoin pour l'update
-                const newPicture = {"imageUrl": newProfilePicture.value};
-                console.log(JSON.stringify(newPicture));
-                var connectPicture = fetch('http://localhost:3000/api/user'+idPage+'/picture', {
-                    method: "PUT",
-                    body: JSON.stringify(newPicture),
-                    headers : {
-                        "Content-Type":"application/json",
-                        "Authorization": 'Bearer '+tokenRequete+''
-                    }
-                })
+                formData.append('image', newProfilePicture.files[0])
+                var connectPicture = fetch('http://localhost:3000/api/user'+idPage+'/picture', options)
                 connectPicture
                 .then(async (res) =>{
                     const response = await res.json();
-                    window.alert(response.message);
-                    document.location.reload();
                 })
                 .catch(function(err){
                     console.log(err);
@@ -218,7 +234,7 @@ getCurrentUser
             })
 
 
-        } catch(e) {
+        }} catch(e) {
             console.log(e);
         }
     })

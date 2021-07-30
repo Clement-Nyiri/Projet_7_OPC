@@ -43,6 +43,10 @@ var getCurrentUser = fetch("http://localhost:3000/api/user/", {
 
 getCurrentUser
 .then(async (res)=>{
+    if(res.status == 404){
+        window.alert("Veuillez vous reconnecter");
+        window.location.replace("login.html");
+    }
     const responseUser = await res.json();
 
     var nav = document.getElementById("barreNav");
@@ -86,21 +90,25 @@ getCurrentUser
             displayPost.classList.add("bg-white");
             displayPost.classList.add("shadow");
             displayPost.classList.add("rounded");
+            displayPost.classList.add("post");
             var singlePost = document.getElementById("filActu");
-            displayPost.innerHTML = '<h4><img src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="mr-3">'+this.name+'</a></h4>\
+            displayPost.innerHTML = '<h4><img class="mr-4 PP_actu" src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="d-inline name_creator">'+this.name+'</a></h4>\
             <button class="btn btn-danger suppPost" id="deletePost'+this.id+'"><i class="fas fa-trash"></i></button>\
-            <p id="date_publi">'+this.date+'</p>\
-            <div class="mt-3 mb-3"><h3><a href="post.html?/'+this.id+'">'+this.content+'</a></h3></div>\
-            <div id="imagePubli" class="w-100"><img src="'+this.image_url+'"/></div>\
-            <div id="likes'+this.id+'"></div>\
+            <p class="date_publi">'+this.date+'</p>\
+            <div class="mt-3 mb-3 pl-4 text_publi"><h5><a href="post.html?/'+this.id+'">'+this.content+'</a></h5></div>\
+            <div class="w-100" id="imagePubli'+this.id+'"><img src="'+this.image_url+'"/></div>\
+            <div class="likes" id="likes'+this.id+'"></div>\
             <div id="comments'+this.id+'" class="bg-secondary"></div>\
+            <div class="bg-secondary">\
             <input type="text" class="w-75 mt-2 mb-2 ajoutComment" id="addComment'+this.id+'" placeholder="Ajouter un commentaire"></input>\
-            <button type="submit" class="btn btn-warning envoiComment" id="sendComment'+this.id+'">Envoyer</button>';
+            <button type="submit" class="btn btn-warning envoiComment" id="sendComment'+this.id+'">Envoyer</button>\
+            </div>';
             singlePost.appendChild(displayPost);
+            
     
             // Si la publication n'a pas d'image    
             if (this.image_url == ''){
-                var imageAAfficher = document.getElementById("imagePubli");
+                var imageAAfficher = document.getElementById('imagePubli'+this.id+'');
                 imageAAfficher.classList.add("d-none");
             }
             
@@ -152,13 +160,13 @@ getCurrentUser
                 });
     
     
-            var isAdmin = responseUser.admin;
-            var idLocalStorage = responseUser.userId;
-            if(idLocalStorage != this.user_id && isAdmin != 1){
-                var boutonSupp = document.getElementById('deletePost'+this.id+'');
-                boutonSupp.classList.add("d-none");
-            }
-    
+                var isAdmin = responseUser.admin;
+                var idLocalStorage = responseUser.userId;
+                if(idLocalStorage != this.user_id && isAdmin != 1){
+                    var boutonSupp = document.getElementById('deletePost'+this.id+'');
+                    boutonSupp.classList.add("d-none");
+                }
+        
     
         }
     };
@@ -180,23 +188,23 @@ getCurrentUser
             displayComment.classList.add("border-bottom");
             displayComment.classList.add("border-dark");
             var location = document.getElementById(`comments${this.id_post}`);
-            displayComment.innerHTML = '<h4 class="mt-2 d-inline"><img src="'+this.profile_picture+'" /><a href="profile.html?/'+this.id_user+'">'+this.username+'</a></h4>\
-            <p class="d-inline">'+this.date+'</p>\
+            displayComment.innerHTML = '<h4 class="mt-2 d-inline"><img src="'+this.profile_picture+'" class="PP_comment" /><a href="profile.html?/'+this.id_user+'" class="name_creator">'+this.username+'</a></h4>\
+            <h6 class="d-inline name_creator">'+this.date+'</h6>\
             <button class="btn btn-danger btn-sm suppComment" id="deleteComment'+this.id_comment+'"><i class="fas fa-trash"></i></button>\
-            <h6 class="mt-2 ml-5">'+this.content+'</h6>';
+            <h6 class="mt-2 comment_content">'+this.content+'</h6>';
             location.appendChild(displayComment);
     
             //Suppression de commentaire
             var btnDeleteComment = document.getElementById('deleteComment'+this.id_comment+'');
             btnDeleteComment.addEventListener('click', (g)=>{
-                var connectDeletePost = fetch('http://localhost:3000/api/comment/'+this.id_comment+'', {
+                var connectDeleteComment = fetch('http://localhost:3000/api/comment/'+this.id_comment+'', {
                     method: "DELETE",
                     headers : {
                         "Content-Type":"application/json",
                         "Authorization": 'Bearer '+tokenRequete+''
                     }
                 })
-                connectDeletePost
+                connectDeleteComment
                     .then(async (res)=>{
                         const response = await res.json();
                         document.location.reload();
@@ -216,8 +224,6 @@ getCurrentUser
         }
     };
     
-    var Post = [];
-    
     var PostToDisplay = fetch("http://localhost:3000/api/post/", {
         method: "GET",
         headers : {
@@ -232,8 +238,6 @@ getCurrentUser
             const realResponse = response.results;
             for (let i=0; i<realResponse.length; i++){
                 var newPublication = new Publication(realResponse[i].id, realResponse[i].image_url, realResponse[i].user_id, realResponse[i].profile_picture, realResponse[i].name, realResponse[i].content, realResponse[i].date);
-                Post.push(newPublication);
-    
                 
                 //On va chercher les likes
                 var likesOfPost = fetch("http://localhost:3000/api/like/"+realResponse[i].id, {
@@ -281,12 +285,14 @@ getCurrentUser
                             })
                             .catch(function(err){
                                 console.log(err);
-                            })
+                            });
                         });
                     } catch(e){
                         console.log(e);
-                    }
-                })
+                    }})
+                    .catch(function(err){
+                        console.log(err)
+                    })
     
                 // On va chercher quelques commentaires
                 var commentsOfPost = fetch('http://localhost:3000/api/comment/'+realResponse[i].id+'/someComments', {
@@ -309,8 +315,10 @@ getCurrentUser
                         console.log(e);
                     }
                 })
+                .catch(function(err){
+                    console.log(err);
+                })
             }
-    
         } catch(e){
             console.log(e);
         }

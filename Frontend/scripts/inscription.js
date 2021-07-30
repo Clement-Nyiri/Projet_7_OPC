@@ -19,10 +19,17 @@ btnRegister.addEventListener('click', (e)=>{
     })
     connect
         .then(async (res)=>{
+            if(res.status == 403){
+                window.alert('Cette adresse email est déja utilisée');
+                window.location.reload()
+            } else if(res.status == 500){
+                window.alert('Il y a eu une erreur');
+                window.location.reload()
+            }else {
             const response = await res.json();
             console.log(response);
             window.location.replace("login.html");
-        })
+            }})
         .catch(function(err){
             console.log(err);
         })

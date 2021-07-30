@@ -8,13 +8,12 @@
     text-decoration: none;
     color: #001427;
 }
-#content{
-    color: black;
+
+#singlePost a{
+    text-decoration: none;
+    color: #001427;
 }
 
-#name_user{
-    color: #006d77;
-}
 .btn-warning{
     color: white;
 }
@@ -23,12 +22,16 @@ h4{
     font-weight: bold;
 }
 
-#date_publi{
+.date_publi{
     font-size: 0.9rem;
 }
 
-#like{
-    width: 15%;
+.likes{
+    margin-left: 5%;
+}
+
+.comment_content{
+    margin-left: 40px;
 }
 
 #publishNewPost{
@@ -60,6 +63,36 @@ h3{
     float: right;
     margin-top: 2%;
     margin-right: 5%;
+}
+
+#profile_picture{
+    height: 400px;
+    width: 400px;
+    object-fit: cover;
+}
+
+#profilePictureChange{
+    width: 400px;
+}
+
+.PP_actu{
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+}
+
+.PP_comment{
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+}
+
+.text_publi{
+    padding-left: 3%;
+}
+
+.name_creator{
+    vertical-align: sub;
 }
 
 // ----------------- Header PC ------------------\\
