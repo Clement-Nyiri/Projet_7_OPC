@@ -10,6 +10,13 @@ btnRegister.addEventListener('click', (e)=>{
         "email": document.getElementById("email").value,
         "password": document.getElementById("inputPassword").value
     };
+    if(document.getElementById("name").value == ""){
+        window.alert("Veuillez renseigner un nom d'utilisateur");
+    } else if(document.getElementById("email").value == ""){
+        window.alert("Veuillez entrer une adresse email valide")
+    } else if(document.getElementById("inputPassword").value == ""){
+        window.alert("Le mot de passe ne peut pas être vide")
+    } else{
     var connect = fetch("http://localhost:3000/api/user/signup", {
         method: "POST",
         body: JSON.stringify(register),
@@ -33,4 +40,5 @@ btnRegister.addEventListener('click', (e)=>{
         .catch(function(err){
             console.log(err);
         })
+    }
 })

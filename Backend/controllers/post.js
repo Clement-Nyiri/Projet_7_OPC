@@ -3,13 +3,18 @@ const fs = require('fs');
 
 exports.create = (req,res,next)=>{
     const connection = database.connect();
-    const userId = req.body.userId;
-    const content = req.body.content;
-    const imageUrl = req.body.imageUrl;
-    console.log(imageUrl);
+    const postObject = req.file ?{
+        userId: JSON.parse(req.body.userId),
+        content : JSON.parse(req.body.content),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : {
+        userId: req.body.userId,
+        content: req.body.content,
+        imageUrl: req.body.image
+    }
     const sql = "INSERT INTO Post (id_user, image_url, content, date)\
     VALUES (?,?,?,NOW());";
-    const sqlParams = [userId, imageUrl, content];
+    const sqlParams = [postObject.userId, postObject.imageUrl, postObject.content];
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if(error){
             res.status(500).json({"error":error.sqlMessage});
@@ -52,18 +57,17 @@ exports.getOnePost = (req,res,next)=>{
 exports.delete = (req,res,next)=>{
     const connection = database.connect();
     const postId = req.params.id;
-    const sql ="DELETE FROM Post WHERE id=?;";
+    const sql = "DELETE FROM Post WHERE id=?"
     const sqlParams = [postId];
-
     connection.execute(sql, sqlParams, (error, results, fields)=>{
-        if (error){
-            res.status(500).json({"error": error.sqlMessage});
+        if(error){
+            res.status(500).json({error});
         } else {
-            res.status(201).json({message : "Publication supprimée"});
+            res.status(200).json({message: "Publication supprimée avec succès !"})
         }
     });
     connection.end();
-};
+    };
 
 exports.getSomePosts = (req,res,next)=>{
     const connection = database.connect();

@@ -103,9 +103,9 @@ getCurrentUser
                 <h4 class="mt-5 mx-auto">Description</h4>\
                 <p id="description" class="mx-auto">'+this.description+'</p>\
                 <textarea id="newDescription" name="newDescription" class="w-50 mx-auto mb-2" placeholder="Nouvelle description ici"></textarea>\
-                <button id="updateDescription" class="btn-primary w-50 mx-auto">Changer ma description</button>\
+                <button id="updateDescription" class="btn btn-primary w-50 mx-auto rounded">Changer ma description</button>\
             </div>\
-            <button id="deleteAccount" class="mt-5 mb-2 btn-danger mx-auto rounded">Supprimer mon compte</button>\
+            <button id="deleteAccount" class="mt-5 mb-2 btn btn-danger mx-auto rounded">Supprimer mon compte</button>\
             </article>';
             location.appendChild(displayProfile);
 

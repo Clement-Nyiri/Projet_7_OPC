@@ -99,7 +99,7 @@ getCurrentUser
             displayPost.innerHTML = '<h4><img class="mr-4 PP_actu" src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="d-inline name_creator">'+this.name+'</a></h4>\
             <button class="btn btn-danger suppPost" id="deletePost'+this.id+'"><i class="fas fa-trash"></i></button>\
             <p class="date_publi">'+this.date+'</p>\
-            <div class="mt-3 mb-3 pl-4 text_publi"><h5><a href="post.html?/'+this.id+'">'+this.content+'</a></h5></div>\
+            <div class="mt-3 mb-3 pl-4 text_publi"><h5>'+this.content+'</h5></div>\
             <div class="w-100 imagePubli"><img src="'+this.image_url+'"/></div>\
             <div class="likes" id="likes'+this.id+'"></div>\
             <div id="comments'+this.id+'" class="bg-secondary"></div>\
@@ -234,7 +234,7 @@ getCurrentUser
                 document.location.replace("index.html");
             } else{
             const response = await res.json();
-            thisPost = new Publication(response.image_url, response.id, response.user_id, response.profile_picture, response.name, response.content, response.date);
+            thisPost = new Publication(response.imageUrl, response.id, response.user_id, response.profile_picture, response.name, response.content, response.date);
 
             //On va chercher les likes dans la BDD (asynchronception)
             var likes = fetch("http://localhost:3000/api/like"+idPage,{

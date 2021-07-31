@@ -1,4 +1,5 @@
 // page d'accueil Groupomania \\
+document.getElementById("imageNewPost").value = null;
 
 // Redirection si token pas OK
 function getWithExpiry(key) {
@@ -73,6 +74,13 @@ getCurrentUser
         window.location.replace("login.html");
     });
 
+    //Clear input file
+    var imgPost = document.getElementById("imageNewPost");
+    var suppImage = document.getElementById("suppImage");
+    suppImage.addEventListener('click', function(){
+        imgPost.value = null;
+    })
+
     class Publication {
         constructor(id, image_url, user_id, profile_picture, name, content, date){
             this.id = id;
@@ -95,8 +103,8 @@ getCurrentUser
             displayPost.innerHTML = '<h4><img class="mr-4 PP_actu" src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="d-inline name_creator">'+this.name+'</a></h4>\
             <button class="btn btn-danger suppPost" id="deletePost'+this.id+'"><i class="fas fa-trash"></i></button>\
             <p class="date_publi">'+this.date+'</p>\
-            <div class="mt-3 mb-3 pl-4 text_publi"><h5><a href="post.html?/'+this.id+'">'+this.content+'</a></h5></div>\
-            <div class="w-100" id="imagePubli'+this.id+'"><img src="'+this.image_url+'"/></div>\
+            <div class="mt-3 mb-3 pl-4 text_publi" id="textPubli'+this.id+'"><h5><a href="post.html?/'+this.id+'">'+this.content+'</a></h5></div>\
+            <div class="w-100 image_publi" id="imagePubli'+this.id+'"><a href="post.html?/'+this.id+'"><img src="'+this.image_url+'"/></a></div>\
             <div class="likes" id="likes'+this.id+'"></div>\
             <div id="comments'+this.id+'" class="bg-secondary"></div>\
             <div class="bg-secondary">\
@@ -107,9 +115,14 @@ getCurrentUser
             
     
             // Si la publication n'a pas d'image    
-            if (this.image_url == ''){
+            if (this.image_url == '' || this.image_url == null){
                 var imageAAfficher = document.getElementById('imagePubli'+this.id+'');
                 imageAAfficher.classList.add("d-none");
+            }
+
+            if (this.content == null || this.content == ""){
+                var contentAAfficher = document.getElementById('textPubli'+this.id+'');
+                contentAAfficher.classList.add("d-none");
             }
             
             //Creation de l'event d'ajout de commentaire
@@ -139,7 +152,8 @@ getCurrentUser
                         console.log(err);
                     })
                 });
-    
+                
+                //Event listener de suppression de Publi
                 const supprimePost = document.getElementById('deletePost'+this.id+'');
                 supprimePost.addEventListener('click', (f)=>{
                     var connectDeletePost = fetch('http://localhost:3000/api/post/'+this.id+'', {
@@ -329,36 +343,85 @@ getCurrentUser
     
     // Post new Publi \\
     
-    var newPubli = document.getElementById("publishNewPost");
-    var contentNewPubli = document.getElementById("contentNewPost");
-    var imageNewPubli = document.getElementById("imageNewPost");
-        newPubli.addEventListener('click', (e)=>{
+    var btnNewPubli = document.getElementById("publishNewPost");
+    
+        btnNewPubli.addEventListener('click', (e)=>{
             e.preventDefault;
-            //On récupère les données nécessaires pour l'ajout de like
-            const Publi = {
-                "userId" : responseUser.userId,
-                "content" : contentNewPubli.value,
-                "imageUrl" : imageNewPubli.value
-            };
-            var connectPost = fetch("http://localhost:3000/api/post/", {
-                method: "POST",
-                body: JSON.stringify(Publi),
-                headers : {
-                "Content-Type":"application/json",
-                "Authorization": 'Bearer '+tokenRequete+''
+            if (contentNewPost.value == "" && imageNewPost.files[0] == undefined){
+                window.alert("Vous ne pouvez pas créer de publication vide")
+            } else if( imageNewPost.files[0] == undefined){
+                var postAEnvoyer = {
+                    "content": contentNewPost.value,
+                    "userId": responseUser.userId,
+                    "image": null
                 }
-            })
+                var connectPostSansImage = fetch('http://localhost:3000/api/post/', {
+                    method: "POST",
+                    body: JSON.stringify(postAEnvoyer),
+                    headers: {
+                        "Content-Type":"application/json",
+                        "Authorization": 'Bearer '+tokenRequete+''
+                    }
+                });
+                    connectPostSansImage
+                    .then(async (res) =>{
+                        const response = await res.json();
+                        window.alert(response.message);
+                        document.location.reload();
+                    })
+                    .catch(function(err){
+                        console.log(err);
+                    })
+            } else if(contentNewPost.value == ""){
+                const formDataSansTexte = new FormData();
+
+                const options =  {
+                    method: "POST",
+                    body: formDataSansTexte,
+                    headers : {
+                        "Authorization": 'Bearer '+tokenRequete+''
+                    }
+                };
+                delete options.headers['Content-Type'];
+                formDataSansTexte.append('image', imageNewPost.files[0]);
+                formDataSansTexte.append("userId", responseUser.userId);
+                formDataSansTexte.append("content", null);
+
+                var connectPostSansTexte = fetch('http://localhost:3000/api/post/', options);
+                connectPostSansTexte
+                .then(async (res) =>{
+                    const response = await res.json();
+                    window.alert(response.message);
+                    document.location.reload();
+                })
+                .catch(function(err){
+                    console.log(err);
+                })
+            }else { // Si la publication contient une image
+            const formData = new FormData();
+
+            const options =  {
+                method: "POST",
+                body: formData,
+                headers : {
+                    "Authorization": 'Bearer '+tokenRequete+''
+                }
+            };
+            delete options.headers['Content-Type'];
+            formData.append('image', imageNewPost.files[0]);
+            formData.append("userId", responseUser.userId);
+            formData.append("content", contentNewPost.value);
+            var connectPost = fetch('http://localhost:3000/api/post/', options);
             connectPost
             .then(async (res) =>{
                 const response = await res.json();
                 window.alert(response.message);
+                imageNewPost.value = "";
                 document.location.reload();
-                imageNewPubli.value = null;
-                contentNewPubli.value = null;
             })
             .catch(function(err){
                 console.log(err);
-            })
+            })}
         });
 })
 .catch(function(err){

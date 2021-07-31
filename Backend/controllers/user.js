@@ -3,6 +3,7 @@ const jwt = require ('jsonwebtoken');
 const database = require('../utils/database');
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr('myTotalySecretKey');
+const fs = require("fs");
 
 exports.signup = (req, res, next) =>{
     bcrypt.hash(req.body.password, 10)
@@ -100,22 +101,13 @@ exports.delete = (req,res,next) =>{
     const userId = req.params.id;
     const sql = "DELETE FROM User WHERE id = ?;";
     const sqlParams = [userId];
-    
     connection.execute(sql, sqlParams, (error, results, fields)=>{
         if(error){
             res.status(500).json({error});
         } else {
-            const sql2 = "SELECT profile_picture FROM User WHERE id=?";
-            connection.execute(sql2, sqlParams, (error, results, fields)=>{
-                if(error){
-                    res.status(501).json({error});
-                } else{
-                    res.status(200).json({message: "Utilisateur supprimé avec succès !"})
-                }
-            })
-            }
-        });
-        connection.end();
+            res.status(200).json({message: "Utilisateur supprimé avec succès !"})
+        }});
+    connection.end();
     };
 
 exports.updateDescription = (req,res,next) =>{
