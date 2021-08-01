@@ -100,7 +100,7 @@ getCurrentUser
             <button class="btn btn-danger suppPost" id="deletePost'+this.id+'"><i class="fas fa-trash"></i></button>\
             <p class="date_publi">'+this.date+'</p>\
             <div class="mt-3 mb-3 pl-4 text_publi"><h5>'+this.content+'</h5></div>\
-            <div class="w-100 imagePubli"><img src="'+this.image_url+'"/></div>\
+            <div class="w-100 image_single_publi"><img src="'+this.image_url+'"/></div>\
             <div class="likes" id="likes'+this.id+'"></div>\
             <div id="comments'+this.id+'" class="bg-secondary"></div>\
             <input type="text" class="w-75 mt-2 mb-2 ajoutComment" id="addComment'+this.id+'" placeholder="Ajouter un commentaire"></input>\

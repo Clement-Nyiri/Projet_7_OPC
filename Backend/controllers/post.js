@@ -4,13 +4,13 @@ const fs = require('fs');
 exports.create = (req,res,next)=>{
     const connection = database.connect();
     const postObject = req.file ?{
-        userId: JSON.parse(req.body.userId),
-        content : JSON.parse(req.body.content),
+        userId: req.body.userId,
+        content : req.body.content,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : {
         userId: req.body.userId,
         content: req.body.content,
-        imageUrl: req.body.image
+        imageUrl: null
     }
     const sql = "INSERT INTO Post (id_user, image_url, content, date)\
     VALUES (?,?,?,NOW());";

@@ -349,7 +349,7 @@ getCurrentUser
             e.preventDefault;
             if (contentNewPost.value == "" && imageNewPost.files[0] == undefined){
                 window.alert("Vous ne pouvez pas créer de publication vide")
-            } else if( imageNewPost.files[0] == undefined){
+            } else if( imageNewPost.files[0] == undefined){ // Si la publication ne contient pas d'image et du texte
                 var postAEnvoyer = {
                     "content": contentNewPost.value,
                     "userId": responseUser.userId,
@@ -367,12 +367,13 @@ getCurrentUser
                     .then(async (res) =>{
                         const response = await res.json();
                         window.alert(response.message);
+                        contentNewPost.value = "";
                         document.location.reload();
                     })
                     .catch(function(err){
                         console.log(err);
                     })
-            } else if(contentNewPost.value == ""){
+            } else if(contentNewPost.value == ""){ // Si la publication contient une image et pas de texte
                 const formDataSansTexte = new FormData();
 
                 const options =  {
@@ -385,19 +386,20 @@ getCurrentUser
                 delete options.headers['Content-Type'];
                 formDataSansTexte.append('image', imageNewPost.files[0]);
                 formDataSansTexte.append("userId", responseUser.userId);
-                formDataSansTexte.append("content", null);
+                formDataSansTexte.append("content", "");
 
                 var connectPostSansTexte = fetch('http://localhost:3000/api/post/', options);
                 connectPostSansTexte
                 .then(async (res) =>{
                     const response = await res.json();
                     window.alert(response.message);
+                    imageNewPost.value = "";
                     document.location.reload();
                 })
                 .catch(function(err){
                     console.log(err);
                 })
-            }else { // Si la publication contient une image
+            }else { // Si la publication contient une image et du texte
             const formData = new FormData();
 
             const options =  {
@@ -417,6 +419,7 @@ getCurrentUser
                 const response = await res.json();
                 window.alert(response.message);
                 imageNewPost.value = "";
+                contentNewPost.value = "";
                 document.location.reload();
             })
             .catch(function(err){

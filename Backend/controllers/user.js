@@ -62,8 +62,6 @@ exports.login = (req, res, next) =>{
                 
                 res.status(200).json({
                     message: "Utilisateur connecté",
-                    id_user: results[0].id,
-                    admin: results[0].admin,
                     tokenCrypted : cryptedToken
                 });
             })
