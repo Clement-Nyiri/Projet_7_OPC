@@ -47,7 +47,7 @@ getCurrentUser
     if(res.status == 404){
         window.alert("Veuillez vous reconnecter");
         window.location.replace("login.html");
-    }
+    } else {
     const responseUser = await res.json();
 
     var nav = document.getElementById("barreNav");
@@ -426,7 +426,7 @@ getCurrentUser
                 console.log(err);
             })}
         });
-})
+}})
 .catch(function(err){
     console.log(err);
 })

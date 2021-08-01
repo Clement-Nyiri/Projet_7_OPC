@@ -95,7 +95,7 @@ getCurrentUser
                 <img src="'+this.profile_picture+'" class="rounded-top" id="profile_picture"/>\
                 </div>\
                 <input type="file" class="ml-4" name="image" id="updateProfilePicture">\
-                <button type="submit" class="btn btn-primary rounded-bottom ml-4" id="profilePictureChange">Changer ma photo de profil</button>\
+                <labek for="name" type="submit" class="btn btn-primary rounded-bottom ml-4" id="profilePictureChange">Changer ma photo de profil</labek>\
             </div>\
             <div id="email_desc" class="mt-3 col-6 text-center d-flex flex-column justify-content-center">\
                 <h4 class="mx-auto">Email</h4>\
@@ -206,27 +206,25 @@ getCurrentUser
 
             // Ajout de la fonction de changement de profile picture
             var btnImage = document.getElementById("profilePictureChange");
-            var newProfilePicture = document.getElementById("updateProfilePicture");
-            const formData = new FormData();
-
-            const options =  {
-                method: "PUT",
-                body: formData,
-                headers : {
-                    "Authorization": 'Bearer '+tokenRequete+''
-                }
-            };
-            delete options.headers['Content-Type'];
-            
             
             btnImage.addEventListener('click', (h)=>{
                 h.preventDefault;
+                const formData = new FormData();
+                const options =  {
+                    method: "PUT",
+                    body: formData,
+                    headers : {
+                        "Authorization": 'Bearer '+tokenRequete+''
+                    }
+                };
+                delete options.headers['Content-Type'];
                 //on récupère ce dont on a besoin pour l'update
-                formData.append('image', newProfilePicture.files[0])
+                formData.append('image', updateProfilePicture.files[0])
                 var connectPicture = fetch('http://localhost:3000/api/user'+idPage+'/picture', options)
                 connectPicture
                 .then(async (res) =>{
                     const response = await res.json();
+                    document.location.reload();
                 })
                 .catch(function(err){
                     console.log(err);
