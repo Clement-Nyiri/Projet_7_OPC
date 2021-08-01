@@ -8379,7 +8379,8 @@ h4, .h4 {
   font-size: 0.9rem; }
 
 .likes {
-  margin-left: 5%; }
+  margin-left: 5%;
+  margin-top: 2%; }
 
 .comment_content {
   margin-left: 40px; }
@@ -8426,7 +8427,7 @@ h3, .h3 {
   width: 40px;
   object-fit: cover; }
 
-.text_publi {
+#text_publi {
   padding-left: 3%; }
 
 .name_creator {
@@ -8437,7 +8438,7 @@ h3, .h3 {
   max-height: 300px;
   object-fit: cover; }
 
-.image_single_publi img {
+#image_single_publi img {
   width: 100%;
   object-fit: cover; }
 
@@ -8462,5 +8463,66 @@ header {
 #profilePicture {
   display: flex;
   flex-direction: column; }
+
+@media all and (min-width: 993px) and (max-width: 1200px) {
+  #profile_picture {
+    max-height: 250px;
+    width: 300px;
+    object-fit: cover; }
+
+  #profilePictureChange {
+    width: 300px; }
+
+  #updateProfilePicture {
+    width: 300px; } }
+@media all and (min-width: 768px) and (max-width: 992px) {
+  .ajoutComment {
+    margin-left: 0; }
+
+  .disconnect {
+    margin-left: auto; }
+
+  .likes {
+    margin-left: 0;
+    margin-top: 2%; }
+
+  #profile_picture {
+    max-height: 150px;
+    width: 200px;
+    object-fit: cover; }
+
+  #profilePictureChange {
+    width: 200px; }
+
+  #updateProfilePicture {
+    width: 200px; } }
+@media all and (min-width: 576px) and (max-width: 767px) {
+  .ajoutComment {
+    margin-left: 0; }
+
+  .disconnect {
+    margin-left: auto; }
+
+  .likes {
+    margin-left: 0;
+    margin-top: 2%; }
+
+  .envoiComment {
+    margin-left: -3%; }
+
+  #profile_picture {
+    max-height: 150px;
+    width: 200px;
+    object-fit: cover; }
+
+  #profilePictureChange {
+    width: 100px; }
+
+  #updateProfilePicture {
+    width: 100px; } }
+@media all and (min-width: 1600px) {
+  #bloc_page {
+    max-width: 1600px;
+    margin: auto; } }
 
 /*# sourceMappingURL=style.css.map */

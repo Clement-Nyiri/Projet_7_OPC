@@ -108,7 +108,7 @@ getCurrentUser
             <div class="likes" id="likes'+this.id+'"></div>\
             <div id="comments'+this.id+'" class="bg-secondary"></div>\
             <div class="bg-secondary">\
-            <input type="text" class="w-75 mt-2 mb-2 ajoutComment" id="addComment'+this.id+'" placeholder="Ajouter un commentaire"></input>\
+            <input type="text" class="w-75 ml-auto mt-2 mb-2 ajoutComment" id="addComment'+this.id+'" placeholder="Ajouter un commentaire"></input>\
             <button type="submit" class="btn btn-warning envoiComment" id="sendComment'+this.id+'">Envoyer</button>\
             </div>';
             singlePost.appendChild(displayPost);

@@ -99,13 +99,26 @@ getCurrentUser
             displayPost.innerHTML = '<h4><img class="mr-4 PP_actu" src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="d-inline name_creator">'+this.name+'</a></h4>\
             <button class="btn btn-danger suppPost" id="deletePost'+this.id+'"><i class="fas fa-trash"></i></button>\
             <p class="date_publi">'+this.date+'</p>\
-            <div class="mt-3 mb-3 pl-4 text_publi"><h5>'+this.content+'</h5></div>\
-            <div class="w-100 image_single_publi"><img src="'+this.image_url+'"/></div>\
+            <div class="mt-3 mb-3 pl-4" id="text_publi"><h5>'+this.content+'</h5></div>\
+            <div class="w-100" id="image_single_publi"><img src="'+this.image_url+'"/></div>\
             <div class="likes" id="likes'+this.id+'"></div>\
             <div id="comments'+this.id+'" class="bg-secondary"></div>\
+            <div class="bg-secondary">\
             <input type="text" class="w-75 mt-2 mb-2 ajoutComment" id="addComment'+this.id+'" placeholder="Ajouter un commentaire"></input>\
-            <button type="submit" class="btn btn-warning envoiComment" id="sendComment'+this.id+'">Envoyer</button>';
+            <button type="submit" class="btn btn-warning envoiComment" id="sendComment'+this.id+'">Envoyer</button>\
+            </div>';
             singlePost.appendChild(displayPost);
+
+            // Si la publication n'a pas d'image    
+            if (this.image_url == '' || this.image_url == null){
+                var imageAAfficher = document.getElementById('image_single_publi');
+                imageAAfficher.classList.add("d-none");
+            }
+
+            if (this.content == null || this.content == ""){
+                var contentAAfficher = document.getElementById('text_publi');
+                contentAAfficher.classList.add("d-none");
+            }
 
             //On ajoute l'event listener de l'ajout de commentaire ici pour suivre l'asynchrone
             const postComment = document.getElementById('sendComment'+this.id+'');
@@ -113,7 +126,7 @@ getCurrentUser
                 e.preventDefault();
                 //Recupération des valeurs du formulaire rempli + création d'un objet avec
                 const Commentaire = {
-                    "userId": responseUser.userId,
+                    "userId": responseUser.userId, 
                     "content": document.getElementById('addComment'+this.id+'').value,
                     "postId": this.id
                 };
@@ -250,7 +263,7 @@ getCurrentUser
                         const responseLikes = await res.json();
                         let like_number = responseLikes.nombre_de_likes;
                         let id_post = responseLikes.postId;
-                        var text = document.getElementById(`likes${id_post}`);
+                        var text = document.getElementById('likes'+id_post+'');
                         var textInside = document.createElement("p");
                         textInside.innerHTML=`<button class="rounded border border-dark bg-warning text-white" id="ajoutLike${id_post}"><i id="iconLike" class="far fa-thumbs-up"></i>J'aime</button>\
                         ${like_number} personne(s) ont aimé cette publication`;
