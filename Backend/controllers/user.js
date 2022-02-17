@@ -3,7 +3,6 @@ const jwt = require ('jsonwebtoken');
 const database = require('../utils/database');
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr('myTotalySecretKey');
-const fs = require("fs");
 
 exports.signup = (req, res, next) =>{
     bcrypt.hash(req.body.password, 10)

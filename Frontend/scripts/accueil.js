@@ -100,7 +100,8 @@ getCurrentUser
             displayPost.classList.add("rounded");
             displayPost.classList.add("post");
             var singlePost = document.getElementById("filActu");
-            displayPost.innerHTML = '<h4><img class="mr-4 PP_actu" src="'+this.profile_picture+'"/><a href="profile.html?/'+this.user_id+'" class="d-inline name_creator">'+this.name+'</a></h4>\
+            displayPost.innerHTML = '<h4><img class="mr-4 PP_actu" src="'+this.profile_picture+'"/>\
+            <a href="profile.html?/'+this.user_id+'" class="d-inline name_creator">'+this.name+'</a></h4>\
             <button class="btn btn-danger suppPost" id="deletePost'+this.id+'"><i class="fas fa-trash"></i></button>\
             <p class="date_publi">'+this.date+'</p>\
             <div class="mt-3 mb-3 pl-4 text_publi" id="textPubli'+this.id+'"><h5><a href="post.html?/'+this.id+'">'+this.content+'</a></h5></div>\
@@ -202,7 +203,7 @@ getCurrentUser
             displayComment.classList.add("border-bottom");
             displayComment.classList.add("border-dark");
             var location = document.getElementById(`comments${this.id_post}`);
-            displayComment.innerHTML = '<h4 class="mt-2 d-inline"><img src="'+this.profile_picture+'" class="PP_comment" /><a href="profile.html?/'+this.id_user+'" class="name_creator">'+this.username+'</a></h4>\
+            displayComment.innerHTML = '<h4 class="mt-2 d-inline"><img src="'+this.profile_picture+'" class="PP_comment" />\<a href="profile.html?/'+this.id_user+'" class="name_creator">'+this.username+'</a></h4>\
             <h6 class="d-inline name_creator">'+this.date+'</h6>\
             <button class="btn btn-danger btn-sm suppComment" id="deleteComment'+this.id_comment+'"><i class="fas fa-trash"></i></button>\
             <h6 class="mt-2 comment_content">'+this.content+'</h6>';

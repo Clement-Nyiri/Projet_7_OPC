@@ -71,7 +71,8 @@ exports.delete = (req,res,next)=>{
 
 exports.getSomePosts = (req,res,next)=>{
     const connection = database.connect();
-    const sql = "SELECT User.profile_picture, User.id AS user_id, Post.id, image_url, Post.content, DATE_FORMAT(Post.date, '%W %e %M %Y at %T') AS date, username AS name\
+    const sql = "SELECT User.profile_picture, User.id AS user_id, Post.id, image_url, Post.content,\
+    DATE_FORMAT(Post.date, '%W %e %M %Y at %T') AS date, username AS name\
     FROM Post \
     INNER JOIN User ON Post.id_user = User.id \
     ORDER BY Post.date DESC \
